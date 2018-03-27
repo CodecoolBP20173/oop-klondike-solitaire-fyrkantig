@@ -230,19 +230,16 @@ public class Game extends Pane {
         Collections.shuffle(deck);
         int cardsToDeal = 1;
         for(Pile tableauPile: tableauPiles) {
+            if(cardsToDeal == 8) break;
             for(int i = 0; i < cardsToDeal; i++){
                 Card cardToAdd = deckIterator.next();
                 tableauPile.addCard(cardToAdd);
                 addMouseEventHandlers(cardToAdd);
                 getChildren().add(cardToAdd);
+                deckIterator.remove();
             }
             tableauPile.getTopCard().flip();
-            if(cardsToDeal<8) {
-                cardsToDeal++;
-            }
-            else {
-                break;
-            }
+            if(++cardsToDeal == 8) break;
         }
 
         deckIterator.forEachRemaining(card -> {
