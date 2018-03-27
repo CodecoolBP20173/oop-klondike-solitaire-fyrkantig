@@ -13,9 +13,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Game extends Pane {
 
@@ -37,6 +35,9 @@ public class Game extends Pane {
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
         if (card.getContainingPile().getPileType() == Pile.PileType.STOCK) {
+            if (stockPile.numOfCards() < 1) {
+                refillStockFromDiscard();
+            }
             card.moveToPile(discardPile);
             card.flip();
             card.setMouseTransparent(false);
@@ -112,9 +113,14 @@ public class Game extends Pane {
     }
 
     public void refillStockFromDiscard() {
-        //TODO
+        for(int i = discardPile.numOfCards()-1; i > -1; i--) {
+            Card card = discardPile.getCards().get(i);
+            card.moveToPile(stockPile);
+            card.flip();
+        }
         System.out.println("Stock refilled from discard pile.");
     }
+
 
     public boolean isMoveValid(Card card, Pile destPile) {
         //TODO
@@ -221,6 +227,7 @@ public class Game extends Pane {
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
         //TODO
+        Collections.shuffle(deck);
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
