@@ -3,14 +3,10 @@ package com.codecool.klondike;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -18,7 +14,7 @@ import java.util.*;
 public class Game extends Pane {
 
     public static final int PILE_IS_FULL = 13;
-    private List<Card> deck = new ArrayList<>();
+    private List<Card> deck;
 
     private Pile stockPile;
     private Pile discardPile;
@@ -247,19 +243,12 @@ public class Game extends Pane {
     }
 
     private void winTheGame() {
-        Stage winPopup = new Stage();
-        winPopup.initModality(Modality.APPLICATION_MODAL);
-        winPopup.setTitle("Congratulations!");
-
-        VBox layout = new VBox();
-        Label message = new Label("You have won the game!");
-        Button winBtn = new Button("Hurray!");
-        winBtn.setOnAction(e -> winPopup.close());
-        layout.getChildren().addAll(message, winBtn);
-
-        Scene page = new Scene(layout);
-        winPopup.setScene(page);
-        winPopup.showAndWait();
+        Alert winBox = new Alert(Alert.AlertType.INFORMATION);
+        winBox.setTitle("Congratulations!");
+        winBox.setHeaderText(null);
+        winBox.setContentText("You have won the game!");
+        // winBox.initModality();
+        winBox.showAndWait();
 
         // Temporary until game can be restarted
         Stage window = (Stage)this.getScene().getWindow();
