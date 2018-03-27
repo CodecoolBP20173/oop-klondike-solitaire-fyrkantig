@@ -17,7 +17,7 @@ import java.util.*;
 
 public class Game extends Pane {
 
-    private List<Card> deck = new ArrayList<>();
+    private List<Card> deck;
 
     private Pile stockPile;
     private Pile discardPile;
@@ -87,7 +87,7 @@ public class Game extends Pane {
             handleValidMove(card, foundationPile);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = null;
+            draggedCards.clear();
         }
 
 
@@ -124,7 +124,7 @@ public class Game extends Pane {
 
     public boolean isMoveValid(Card card, Pile destPile) {
         //TODO
-        int cardRank = card.getRank();
+        int cardRank = card.getRank().VALUE;
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
             if (cardRank == 13 && destPile.isEmpty()) {
                 return true;
@@ -132,7 +132,7 @@ public class Game extends Pane {
                 return false;
             }
             Card topCard = destPile.getTopCard();
-            int destCardRank = topCard.getRank();
+            int destCardRank = topCard.getRank().VALUE;
 
             if (Card.isOppositeColor(topCard, card) && cardRank == destCardRank - 1) {
                 return true;
@@ -146,7 +146,7 @@ public class Game extends Pane {
                 return false;
             }
             Card topCard = destPile.getTopCard();
-            int destCardRank = topCard.getRank();
+            int destCardRank = topCard.getRank().VALUE;
 
             if (Card.isSameSuit(topCard, card) && cardRank == destCardRank + 1) {
                 return true;

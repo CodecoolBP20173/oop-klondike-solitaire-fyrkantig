@@ -47,7 +47,7 @@ public class Card extends ImageView {
     }
 
     public String getShortName() {
-        return "S" + suit + "R" + rank;
+        return "S" + suit + "R" + rank.VALUE;
     }
 
     public DropShadow getDropShadow() {
@@ -74,20 +74,11 @@ public class Card extends ImageView {
 
     @Override
     public String toString() {
-        return "The " + "Rank" + rank + " of " + "Suit" + suit;
+        return "The " + "Rank " + rank.VALUE + " of " + "Suit " + suit;
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        //TODO
-        List<Integer> red = Arrays.asList(1, 2);
-
-        List<Integer> black = Arrays.asList(3, 4);
-
-        if(red.contains(card1.getSuit())){
-            return black.contains(card2.getSuit());
-        }else {
-            return red.contains(card2.getSuit());
-        }
+        return !(card1.getSuit().COLOR == card2.getSuit().COLOR);
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
