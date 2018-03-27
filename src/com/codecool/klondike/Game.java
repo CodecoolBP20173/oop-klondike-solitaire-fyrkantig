@@ -112,7 +112,22 @@ public class Game extends Pane {
 
     public boolean isMoveValid(Card card, Pile destPile) {
         //TODO
-        return true;
+
+        int cardRank = card.getRank();
+        if (cardRank == 13 && destPile.isEmpty()) {
+            return true;
+        } else if ( destPile.isEmpty()) {
+            return false;
+        }
+        Card topCard = destPile.getTopCard();
+        int destCardRank = topCard.getRank();
+
+        if (Card.isOppositeColor(topCard, card) &&  cardRank == destCardRank - 1 ){
+            return true;
+        } else {
+            return false;
+        }
+
     }
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
