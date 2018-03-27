@@ -109,9 +109,9 @@ public class Card extends ImageView {
         String suitName;
         for (Suit suit : Suit.values()) {
             suitName = suit.toString();
-            for (int rank = 1; rank < 14; rank++) {
-                String cardName = suitName + rank;
-                String cardId = "S" + suit + "R" + rank;
+            for (Rank rank : Rank.values()) {
+                String cardName = suitName + rank.VALUE;
+                String cardId = "S" + suit + "R" + rank.VALUE;
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
             }
@@ -121,7 +121,13 @@ public class Card extends ImageView {
 }
 
 enum Suit {
-    CLUBS, SPADES, DIAMONDS, HEARTS;
+    CLUBS("black"), SPADES("black"), DIAMONDS("red"), HEARTS("red");
+
+    final String COLOR;
+
+    Suit(String color) {
+        this.COLOR = color;
+    }
 
     @Override
     public String toString() {
@@ -130,7 +136,15 @@ enum Suit {
 }
 
 enum Rank {
-    ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING;
+    ACE(1), TWO(2), THREE(3), FOUR(4),
+    FIVE(5), SIX(6), SEVEN(7), EIGHT(8),
+    NINE(9), TEN(10), JACK(11), QUEEN(12), KING(13);
+
+    final int VALUE;
+
+    Rank(int value) {
+        this.VALUE = value;
+    }
 
     @Override
     public String toString() {
