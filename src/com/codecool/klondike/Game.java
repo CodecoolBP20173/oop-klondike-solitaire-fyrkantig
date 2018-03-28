@@ -49,6 +49,9 @@ public class Game extends Pane {
                 if ((card.getRank() == Rank.ACE && topCard == null) || (topCard != null &&
                         topCard.getSuit() == card.getSuit() && topCard.getRank().VALUE == card.getRank().VALUE - 1)) {
                     card.moveToPile(foundationPile);
+                    checkWinCondition();
+                    if (isGameWon()) winTheGame();
+                    break;
                 }
             }
         }
@@ -132,7 +135,6 @@ public class Game extends Pane {
 
 
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO
         int cardRank = card.getRank().VALUE;
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
             if (cardRank == 13 && destPile.isEmpty()) {
@@ -200,6 +202,7 @@ public class Game extends Pane {
         MouseUtil.slideToDest(draggedCards, destPile);
         draggedCards.clear();
 
+        checkWinCondition();
         if (isGameWon()) winTheGame();
     }
 
@@ -237,7 +240,6 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        //TODO
         Collections.shuffle(deck);
         int cardsToDeal = 1;
         for(Pile tableauPile: tableauPiles) {
@@ -293,6 +295,42 @@ public class Game extends Pane {
         redoBtn.setLayoutY(20);
         redoBtn.setOnAction(e -> undo());
         getChildren().add(redoBtn);
+    }
+
+    private void checkWinCondition() {
+        if (!(stockPile.isEmpty() && discardPile.isEmpty())) return;
+        for (Pile tableauPile : tableauPiles) {
+            for (Card card : tableauPile.getCards()) {
+                if (card.isFaceDown()) return;
+            }
+        }
+        moveAllCardsToFoundationPiles();
+    }
+
+    private void moveAllCardsToFoundationPiles() {
+        while (cardsInTableau()) {
+
+            for (Pile tableauPile : tableauPiles) {
+                if (tableauPile.isEmpty()) continue;
+                Card topCard = tableauPile.getTopCard();
+                for (Pile foundationPile : foundationPiles) {
+                    Card targetCard = foundationPile.getTopCard();
+                    if ((targetCard == null && topCard.getRank() == Rank.ACE) ||
+                            (targetCard != null && targetCard.getSuit() == topCard.getSuit() &&
+                                    targetCard.getRank().VALUE == topCard.getRank().VALUE - 1)) {
+                        topCard.moveToPile(foundationPile);
+                    }
+                }
+            }
+
+        }
+    }
+
+    private boolean cardsInTableau() {
+        for (Pile tableauPile : tableauPiles) {
+            if (!tableauPile.isEmpty()) return true;
+        }
+        return false;
     }
 
 }
