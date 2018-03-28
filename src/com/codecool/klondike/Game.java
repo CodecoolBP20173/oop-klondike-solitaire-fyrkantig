@@ -82,28 +82,31 @@ public class Game extends Pane {
         if (draggedCards.isEmpty())
             return;
         Card card = (Card) e.getSource();
-        Card secondTopCard = card.getContainingPile().getSecondTopCard();
         Pile tableauPile = getValidIntersectingPile(card, tableauPiles);
         Pile foundationPile = getValidIntersectingPile(card, foundationPiles);
         //TODO
-        if (tableauPile != null) {
-            handleValidMove(card, tableauPile);
-            if (secondTopCard != null && secondTopCard.getContainingPile().getPileType() != Pile.PileType.DISCARD) {
-                secondTopCard.flip();
+        Pile cardsCurrentPile = card.getContainingPile();
+        int countFaceDown = 0;
+        for(Card currentCard: cardsCurrentPile.getCards()){
+            if (currentCard.isFaceDown()){
+                countFaceDown ++;
             }
 
+        }
+        if (tableauPile != null) {
+            handleValidMove(card, tableauPile);
+            if (countFaceDown != 0 && cardsCurrentPile.getPileType() != Pile.PileType.DISCARD) {
+                 cardsCurrentPile.getCards().get(countFaceDown - 1).flip();
+            }
         } else if (foundationPile != null) {
             handleValidMove(card, foundationPile);
-            if (secondTopCard != null && secondTopCard.getContainingPile().getPileType() != Pile.PileType.DISCARD) {
-                secondTopCard.flip();
+            if (countFaceDown != 0 && cardsCurrentPile.getPileType() != Pile.PileType.DISCARD) {
+                 cardsCurrentPile.getCards().get(countFaceDown - 1).flip();
             }
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
         }
-
-
-
     };
 
 
