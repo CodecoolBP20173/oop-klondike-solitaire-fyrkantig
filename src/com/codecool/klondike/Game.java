@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -41,6 +42,15 @@ public class Game extends Pane {
             card.flip();
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
+        }
+        else if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+            for (Pile foundationPile : foundationPiles) {
+                Card topCard = foundationPile.getTopCard();
+                if ((card.getRank() == Rank.ACE && topCard == null) || (topCard != null &&
+                        topCard.getSuit() == card.getSuit() && topCard.getRank().VALUE == card.getRank().VALUE - 1)) {
+                    card.moveToPile(foundationPile);
+                }
+            }
         }
     };
 
@@ -88,9 +98,6 @@ public class Game extends Pane {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
         }
-
-
-
     };
 
     public boolean isGameWon() {
