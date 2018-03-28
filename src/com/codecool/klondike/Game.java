@@ -2,10 +2,11 @@ package com.codecool.klondike;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -14,13 +15,15 @@ import java.util.*;
 
 public class Game extends Pane {
 
-    public static final int PILE_IS_FULL = 13;
+    private static final int PILE_IS_FULL = 13;
     private List<Card> deck;
 
     private Pile stockPile;
     private Pile discardPile;
     private List<Pile> foundationPiles = FXCollections.observableArrayList();
     private List<Pile> tableauPiles = FXCollections.observableArrayList();
+
+    private Stack<Move> moves = new Stack<>();
 
     private double dragStartX, dragStartY;
     private List<Card> draggedCards = FXCollections.observableArrayList();
@@ -40,6 +43,15 @@ public class Game extends Pane {
             card.flip();
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
+        }
+        else if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+            for (Pile foundationPile : foundationPiles) {
+                Card topCard = foundationPile.getTopCard();
+                if ((card.getRank() == Rank.ACE && topCard == null) || (topCard != null &&
+                        topCard.getSuit() == card.getSuit() && topCard.getRank().VALUE == card.getRank().VALUE - 1)) {
+                    card.moveToPile(foundationPile);
+                }
+            }
         }
     };
 
@@ -121,6 +133,7 @@ public class Game extends Pane {
 
     public Game() {
         deck = Card.createNewDeck();
+        addRedoButton();
         initPiles();
         dealCards();
     }
@@ -207,6 +220,7 @@ public class Game extends Pane {
             msg = String.format("Placed %s to %s.", card, destPile.getTopCard());
         }
         System.out.println(msg);
+        moves.push(new Move(draggedCards));
         MouseUtil.slideToDest(draggedCards, destPile);
         draggedCards.clear();
 
@@ -288,6 +302,21 @@ public class Game extends Pane {
         // Temporary until game can be restarted
         Stage window = (Stage)this.getScene().getWindow();
         window.close();
+    }
+
+    public void undo() {
+        if (moves.empty()) return;
+
+        Move lastMove = moves.pop();
+        MouseUtil.slideToDest(lastMove.getDraggedCards(), lastMove.getSource());
+    }
+
+    private void addRedoButton() {
+        Button redoBtn = new Button("Redo");
+        redoBtn.setLayoutX(500);
+        redoBtn.setLayoutY(20);
+        redoBtn.setOnAction(e -> undo());
+        getChildren().add(redoBtn);
     }
 
 }
