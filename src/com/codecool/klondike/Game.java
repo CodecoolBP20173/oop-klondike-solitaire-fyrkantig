@@ -44,7 +44,7 @@ public class Game extends Pane {
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
-        else if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+        else if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 && card.getContainingPile().getTopCard() == card) {
             for (Pile foundationPile : foundationPiles) {
                 Card topCard = foundationPile.getTopCard();
                 if ((card.getRank() == Rank.ACE && topCard == null) || (topCard != null &&
