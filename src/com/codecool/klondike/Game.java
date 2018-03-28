@@ -115,12 +115,12 @@ public class Game extends Pane {
         }
         if (tableauPile != null) {
             handleValidMove(card, tableauPile);
-            if (countFaceDown != 0 && cardsCurrentPile.getPileType() != Pile.PileType.DISCARD) {
+            if (countFaceDown != 0 && cardsCurrentPile.getPileType() != Pile.PileType.DISCARD && card.getContainingPile().getCards().get(card.getContainingPile().getCards().indexOf(card)-1).isFaceDown()) {
                  cardsCurrentPile.getCards().get(countFaceDown - 1).flip();
             }
         } else if (foundationPile != null) {
             handleValidMove(card, foundationPile);
-            if (countFaceDown != 0 && cardsCurrentPile.getPileType() != Pile.PileType.DISCARD) {
+            if (countFaceDown != 0 && cardsCurrentPile.getPileType() != Pile.PileType.DISCARD && card.getContainingPile().getCards().get(card.getContainingPile().getCards().indexOf(card)-1).isFaceDown()) {
                  cardsCurrentPile.getCards().get(countFaceDown - 1).flip();
             }
         } else {
