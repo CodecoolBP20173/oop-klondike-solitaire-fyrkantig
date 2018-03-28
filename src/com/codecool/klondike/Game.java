@@ -68,7 +68,6 @@ public class Game extends Pane {
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
 
-        int pileSize = activePile.getCards().size();
         int cardIndex = activePile.getCards().indexOf(card);
         ListIterator<Card> cards = activePile.getCards().listIterator(cardIndex);
 
