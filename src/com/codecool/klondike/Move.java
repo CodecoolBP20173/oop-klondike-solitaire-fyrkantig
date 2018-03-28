@@ -14,6 +14,12 @@ class Move {
         this.source = this.draggedCards.get(0).getContainingPile();
     }
 
+    Move(Card card) {
+        draggedCards = FXCollections.observableArrayList();
+        draggedCards.add(card);
+        this.source = card.getContainingPile();
+    }
+
     public List<Card> getDraggedCards() {
         return draggedCards;
     }
