@@ -2,6 +2,7 @@ package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -19,8 +20,8 @@ public class Game extends Pane {
 
     private Pile stockPile;
     private Pile discardPile;
-    private List<Pile> foundationPiles = FXCollections.observableArrayList();
-    private List<Pile> tableauPiles = FXCollections.observableArrayList();
+    private List<Pile> foundationPiles;
+    private List<Pile> tableauPiles;
 
     private Stack<Move> moves = new Stack<>();
 
@@ -137,10 +138,20 @@ public class Game extends Pane {
     }
 
     public Game() {
+        initGame();
+    }
+
+    private void initGame() {
         deck = Card.createNewDeck();
         addRedoButton();
+        addNewGameButton();
         initPiles();
         dealCards();
+    }
+
+    private void restart() {
+        getChildren().clear();
+        initGame();
     }
 
     public void addMouseEventHandlers(Card card) {
@@ -233,6 +244,8 @@ public class Game extends Pane {
     }
 
     private void initPiles() {
+        foundationPiles = FXCollections.observableArrayList();
+        tableauPiles = FXCollections.observableArrayList();
         stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
         stockPile.setBlurredBackground();
         stockPile.setLayoutX(95);
@@ -302,10 +315,7 @@ public class Game extends Pane {
         winBox.setContentText("You have won the game!");
         // winBox.initModality();
         winBox.showAndWait();
-
-        // Temporary until game can be restarted
-        Stage window = (Stage)this.getScene().getWindow();
-        window.close();
+        restart();
     }
 
     public void undo() {
@@ -322,6 +332,13 @@ public class Game extends Pane {
         redoBtn.setOnAction(e -> undo());
         getChildren().add(redoBtn);
     }
+
+    private void addNewGameButton() {
+        Button newGameBtn = new Button("New Game");
+        newGameBtn.setLayoutX(500);
+        newGameBtn.setLayoutY(40);
+        newGameBtn.setOnAction(e -> restart());
+        getChildren().add(newGameBtn);
 
     private void checkWinCondition() {
         if (!(stockPile.isEmpty() && discardPile.isEmpty())) return;
