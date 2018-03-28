@@ -51,6 +51,7 @@ public class Game extends Pane {
                     if (card.getContainingPile().getPileType() != Pile.PileType.DISCARD && card.getContainingPile().getCards().size() != 1) {
                         card.getContainingPile().getSecondTopCard().flip();
                     }
+                    moves.push(new Move(card));
                     card.moveToPile(foundationPile);
                     checkWinCondition();
                     if (isGameWon()) winTheGame();
