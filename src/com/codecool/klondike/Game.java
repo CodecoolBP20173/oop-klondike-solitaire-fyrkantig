@@ -339,6 +339,7 @@ public class Game extends Pane {
         newGameBtn.setLayoutY(40);
         newGameBtn.setOnAction(e -> restart());
         getChildren().add(newGameBtn);
+    }
 
     private void checkWinCondition() {
         if (!(stockPile.isEmpty() && discardPile.isEmpty())) return;
