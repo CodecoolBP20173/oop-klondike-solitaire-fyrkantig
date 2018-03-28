@@ -49,9 +49,14 @@ public class Game extends Pane {
                 Card topCard = foundationPile.getTopCard();
                 if ((card.getRank() == Rank.ACE && topCard == null) || (topCard != null &&
                         topCard.getSuit() == card.getSuit() && topCard.getRank().VALUE == card.getRank().VALUE - 1)) {
+                    if (card.getContainingPile().getPileType() != Pile.PileType.DISCARD && card.getContainingPile().getCards().size() != 1) {
+                        card.getContainingPile().getSecondTopCard().flip();
+                    }
                     card.moveToPile(foundationPile);
+                    break;
                 }
             }
+
         }
     };
 
